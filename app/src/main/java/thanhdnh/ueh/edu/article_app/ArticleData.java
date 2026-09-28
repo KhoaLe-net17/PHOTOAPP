@@ -10,11 +10,12 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ArticleData {
-  public static ArticleList data;
+  public static UserList data;
   private Context context;
   private GridView gridview;
   private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -24,27 +25,35 @@ public class ArticleData {
     this.gridview = gridview;
   }
 
-  public static Article getPhotoFromId(int id) {
-    for (int i = 0; i < data.getArticles().size(); i++)
-      if (data.getArticles().get(i).getArticle_id() == id)
-        return data.getArticles().get(i);
+  public static UserProfile getPhotoFromId(int id) {
+    if (data == null || data.getUsers() == null) return null;
+    for (int i = 0; i < data.getUsers().size(); i++) {
+      if (data.getUsers().get(i).getId() == id)
+        return data.getUsers().get(i);
+    }
     return null;
   }
 
-  public void loadData(String url, Activity activity){
-      executor.execute(()->{
-          File file = Downloader.downloadFile(url, context.getCacheDir());
-          if(file!=null)
-            activity.runOnUiThread(()->{
-              Gson gson = new Gson();
-              data = gson.fromJson(readText(file), (Type) ArticleList.class);
-              ArticleAdapter adapter = new ArticleAdapter(data.getArticles(), context);
-              gridview.setAdapter(adapter);
-            });
-        });
+  public static ArrayList<UserProfile> getMockStudents() {
+    ArrayList<UserProfile> list = new ArrayList<>();
+    list.add(new UserProfile(1, "Nguyễn Văn A", "nguyenvana@gmail.com", "Học sinh lớp 12A1, hăng hái tham gia các hoạt động ngoại khóa và yêu thích công nghệ.", "https://i.pravatar.cc/300?img=11", "Đá bóng, Lập trình Android"));
+    list.add(new UserProfile(2, "Trần Thị B", "tranthib@gmail.com", "Học sinh giỏi mỹ thuật, thích đọc sách văn học và tham gia câu lạc bộ âm nhạc.", "https://i.pravatar.cc/300?img=5", "Vẽ tranh, Nghe nhạc"));
+    list.add(new UserProfile(3, "Lê Hoàng C", "lehoangc@gmail.com", "Thành viên đội tuyển cờ vua trường, tính cách hòa đồng, nhanh nhạy.", "https://i.pravatar.cc/300?img=12", "Chơi cờ vua, Bơi lội"));
+    list.add(new UserProfile(4, "Phạm Minh D", "phamminhd@gmail.com", "Đam mê nhiếp ảnh nghệ thuật, thích khám phá các vùng đất mới.", "https://i.pravatar.cc/300?img=13", "Chụp ảnh, Du lịch"));
+    list.add(new UserProfile(5, "Hoàng Anh E", "hoanganhe@gmail.com", "Thích sáng tạo các món ăn mới, quản lý lớp năng nổ và nhiệt tình.", "https://i.pravatar.cc/300?img=9", "Nấu ăn, Làm bánh"));
+    list.add(new UserProfile(6, "Vũ Quốc F", "vuquocf@gmail.com", "Nhạc công nhóm nhạc trường, yêu thích thể thao và thích giao lưu bạn bè.", "https://i.pravatar.cc/300?img=14", "Chơi Guitar, Cầu lông"));
+    list.add(new UserProfile(7, "Đặng Thu G", "dangthug@gmail.com", "Học sinh giỏi tiếng Anh, từng đạt giải thưởng cuộc thi múa cấp thành phố.", "https://i.pravatar.cc/300?img=10", "Múa, Học ngoại ngữ"));
+    list.add(new UserProfile(8, "Bùi Tấn H", "buitanh@gmail.com", "Đội trưởng đội bóng rổ lớp, phong cách năng động và hòa đồng.", "https://i.pravatar.cc/300?img=15", "Chơi bóng rổ, Game online"));
+    return list;
   }
 
-  public String readText(File file){
+  public void loadData(String url, Activity activity) {
+    data = new UserList(getMockStudents());
+    ArticleAdapter adapter = new ArticleAdapter(data.getUsers(), context);
+    gridview.setAdapter(adapter);
+  }
+
+  public String readText(File file) {
     BufferedReader reader = null;
     try {
       InputStream stream = new FileInputStream(file);
@@ -57,8 +66,7 @@ public class ArticleData {
       return buffer.toString();
     } catch (Exception e) {
       e.printStackTrace();
-    } finally {
     }
-    return reader.toString();
+    return "";
   }
 }
