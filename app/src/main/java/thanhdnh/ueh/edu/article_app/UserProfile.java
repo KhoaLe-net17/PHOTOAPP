@@ -28,6 +28,9 @@ public class UserProfile {
   @Expose
   private String hobby;
 
+  public UserProfile() {
+  }
+
   public UserProfile(int id, String username, String email, String desc, String avatar_url, String hobby) {
     this.id = id;
     this.username = username;

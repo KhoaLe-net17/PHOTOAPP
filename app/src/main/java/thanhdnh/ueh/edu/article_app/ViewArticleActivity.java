@@ -9,8 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.squareup.picasso.Picasso;
 
 public class ViewArticleActivity extends AppCompatActivity {
-  ImageView iv_detail;
-  TextView tv_detail_title, tv_detail_id, tv_detail_email, tv_detail_hobby, tv_detail_description;
+  private ImageView iv_detail;
+  private TextView tv_detail_title;
+  private TextView tv_detail_id;
+  private TextView tv_detail_email;
+  private TextView tv_detail_hobby;
+  private TextView tv_detail_description;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
